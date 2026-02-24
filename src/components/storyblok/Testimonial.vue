@@ -35,6 +35,11 @@ const authorImage = computed(() => props.blok?.author_image || (props.blok as an
 .quotation-mark::before {
   content: '“';
   font-family: serif;
-  @apply block text-6xl text-app-text/10 mb-4;
+  display: block;
+  font-size: 3.75rem;
+  line-height: 1;
+  color: var(--color-app-text);
+  opacity: 0.1;
+  margin-bottom: 1rem;
 }
 </style>
