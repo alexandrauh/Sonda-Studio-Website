@@ -38,7 +38,7 @@ const handleSubmit = async () => {
     const response = await fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
+      body: new URLSearchParams(formData as any).toString()
     })
 
     if (response.ok) {
