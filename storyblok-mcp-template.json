@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "storyblok": {
+            "command": "node",
+            "args": [
+                "src/main.ts"
+            ],
+            "env": {
+                "STORYBLOK_SPACE_ID": "REPLACE_WITH_SPACE_ID",
+                "STORYBLOK_PERSONAL_TOKEN": "REPLACE_WITH_PERSONAL_TOKEN"
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+    --color-brand-cream: #f4efe0;
+    --color-brand-brown: #2c2020;
+    --color-brand-sand: #9b978b;
+
+    /* Theme-aware semantic colors */
+    --color-app-bg: var(--bg);
+    --color-app-text: var(--text);
+    --color-app-text-muted: var(--text-muted);
+    --color-app-border: var(--border);
+
+    --font-serif: "Sirivennela", serif;
+    --font-sans: "Tenor Sans", sans-serif;
+
+    --text-display-giant: clamp(4rem, 12vw, 10rem);
+    --text-2xs: 10px;
+    --text-3xs: 11px;
+
+    --tracking-widest-marketing: 0.3em;
+    --tracking-extra-wide: 0.2em;
+    --tracking-label: 0.1em;
+}
+
+:root {
+    --bg: var(--color-brand-brown);
+    --text: var(--color-brand-cream);
+    --text-muted: color-mix(in srgb, var(--color-brand-cream), transparent 40%);
+    --border: color-mix(in srgb, var(--color-brand-cream), transparent 90%);
+    --overlay-bg: color-mix(in srgb, var(--color-brand-brown), transparent 10%);
+}
+
+@layer base {
+
+    html,
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        @apply antialiased transition-colors duration-500;
+        font-family: var(--font-sans);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-sans);
+        @apply font-normal;
+        color: var(--text);
+    }
+}
+
+/* Custom button components - they swap colors in dark mode automatically if they rely on brand-brown/cream correctly */
+/* But for clarity, we can make them use the semantic variables */
+.button-primary {
+    background-color: var(--text);
+    color: var(--bg);
+    @apply px-12 py-5 font-light uppercase tracking-widest-marketing transition-all hover:opacity-90 text-xs inline-block;
+}
+
+.button-secondary {
+    @apply bg-brand-sand text-brand-cream px-12 py-5 font-light uppercase tracking-widest-marketing transition-all hover:opacity-90 text-xs inline-block;
+}
+
+.button-outline {
+    border: 1px solid var(--text);
+    color: var(--text);
+    @apply px-12 py-5 font-light uppercase tracking-widest-marketing transition-all hover:opacity-90 text-xs inline-block;
+}
+
+.button-outline:hover {
+    background-color: var(--text);
+    color: var(--bg);
+}
+
+/* Accessibility Utilities */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

@@ -1,0 +1,14 @@
+{
+    "mcpServers": {
+        "storyblok": {
+            "command": "node",
+            "args": [
+                "/Users/alexandra/Sonda Studio Website/.mcp-servers/storyblok-mcp/build/index.js"
+            ],
+            "env": {
+                "STORYBLOK_SPACE_ID": "290135578248163",
+                "STORYBLOK_PERSONAL_TOKEN": "QaQFtIIOTBHc0ZnZi1QIVgtt-138569498116790-kstd2bdSsBh2c9XHGosu"
+            }
+        }
+    }
+}
