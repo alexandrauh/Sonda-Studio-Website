@@ -102,7 +102,7 @@ onMounted(() => {
           :key="i"
           class="hero-word inline-block mr-[0.3em]"
           :class="{ 'hero-word-visible': animationReady }"
-          :style="{ transitionDelay: `${i * 500}ms` }"
+          :style="{ transitionDelay: `${Number(i) * 500}ms` }"
         >{{ word }}</span>
       </h1>
 
@@ -117,12 +117,12 @@ onMounted(() => {
           <div v-if="buttons && buttons.length" class="flex flex-wrap items-center justify-start gap-8">
             <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
               <router-link 
-                :to="getButtonLink(button, index)"
+                :to="getButtonLink(button, Number(index))"
                 :class="[
                   index === 0 ? 'button-primary' : 'button-secondary'
                 ]"
               >
-                {{ getButtonLabel(button, index) }}
+                {{ getButtonLabel(button, Number(index)) }}
               </router-link>
             </template>
           </div>
