@@ -57,48 +57,59 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
+
+const adjustHeight = (e: Event) => {
+  const target = e.target as HTMLTextAreaElement
+  target.style.height = 'auto'
+  target.style.height = `${target.scrollHeight}px`
+}
 </script>
 
 <template>
-  <div v-if="blok" v-editable="blok" class="max-w-3xl mx-auto p-8 md:p-12 lg:p-24 bg-app-text/5 transition-colors duration-500">
-    <h2 class="text-4xl md:text-5xl font-normal mb-12 md:mb-16 text-app-text">{{ title }}</h2>
-    
-    <div v-if="submitSuccess" class="p-6 mb-8 bg-green-900/20 border border-green-500/30 text-green-300 font-light rounded-sm tracking-wide">
-      Thank you for your message. We will reach out to you shortly.
-    </div>
-    
-    <div v-if="submitError" class="p-6 mb-8 bg-red-900/20 border border-red-500/30 text-red-300 font-light rounded-sm tracking-wide">
-      There was an error submitting the form. Please try again later.
-    </div>
-
-    <form @submit.prevent="handleSubmit" name="contact" data-netlify="true" netlify-honeypot="bot-field" class="space-y-10" v-if="!submitSuccess">
-      <input type="hidden" name="form-name" value="contact" />
+  <div id="contact-form" v-if="blok" v-editable="blok" class="w-full bg-brand-cream text-brand-brown py-20 px-6 md:px-12 lg:px-24 transition-colors duration-500">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-normal mb-12 md:mb-16 text-brand-brown">{{ title }}</h2>
       
-      <p class="hidden">
-        <label>Don’t fill this out if you're human: <input name="bot-field" v-model="form.botField" /></label>
-      </p>
+      <div v-if="submitSuccess" class="p-6 mb-8 bg-green-100 border border-green-500/30 text-green-800 font-light rounded-sm tracking-wide">
+        Thank you for your message. We will reach out to you shortly.
+      </div>
+      
+      <div v-if="submitError" class="p-6 mb-8 bg-red-100 border border-red-500/30 text-red-800 font-light rounded-sm tracking-wide">
+        There was an error submitting the form. Please try again later.
+      </div>
 
-      <div class="group py-2">
-        <label for="name" class="block text-3xs font-light text-app-text/40 mb-2 tracking-label uppercase group-focus-within:text-app-text transition-colors">Full Name</label>
-        <div class="border-b border-app-text/20 group-focus-within:border-app-text transition-colors">
-          <input id="name" v-model="form.name" type="text" name="name" autocomplete="name" class="w-full bg-transparent text-app-text focus:outline-none py-2 font-light" required :disabled="isSubmitting" />
+      <form @submit.prevent="handleSubmit" name="contact" data-netlify="true" netlify-honeypot="bot-field" class="space-y-10" v-if="!submitSuccess">
+        <input type="hidden" name="form-name" value="contact" />
+        
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" v-model="form.botField" /></label>
+        </p>
+
+        <div class="group py-2">
+          <label for="name" class="block text-xs font-light text-brand-brown mb-2 tracking-label uppercase transition-colors">Full Name</label>
+          <div class="relative border-b border-brand-brown">
+            <input id="name" v-model="form.name" type="text" name="name" autocomplete="name" class="w-full bg-transparent text-brand-brown focus:outline-none py-2 font-light peer" required :disabled="isSubmitting" />
+            <div class="absolute bottom-[-1px] left-0 w-full h-[2px] bg-brand-brown transform scale-x-0 origin-left transition-transform duration-300 peer-focus:scale-x-100"></div>
+          </div>
         </div>
-      </div>
-      <div class="group py-2">
-        <label for="email" class="block text-3xs font-light text-app-text/40 mb-2 tracking-label uppercase group-focus-within:text-app-text transition-colors">Email Address</label>
-        <div class="border-b border-app-text/20 group-focus-within:border-app-text transition-colors">
-          <input id="email" v-model="form.email" type="email" name="email" autocomplete="email" class="w-full bg-transparent text-app-text focus:outline-none py-2 font-light" required :disabled="isSubmitting" />
+        <div class="group py-2">
+          <label for="email" class="block text-xs font-light text-brand-brown mb-2 tracking-label uppercase transition-colors">Email Address</label>
+          <div class="relative border-b border-brand-brown">
+            <input id="email" v-model="form.email" type="email" name="email" autocomplete="email" class="w-full bg-transparent text-brand-brown focus:outline-none py-2 font-light peer" required :disabled="isSubmitting" />
+            <div class="absolute bottom-[-1px] left-0 w-full h-[2px] bg-brand-brown transform scale-x-0 origin-left transition-transform duration-300 peer-focus:scale-x-100"></div>
+          </div>
         </div>
-      </div>
-      <div class="group py-2">
-        <label for="message" class="block text-3xs font-light text-app-text/40 mb-2 tracking-label uppercase group-focus-within:text-app-text transition-colors">Your Message</label>
-        <div class="border-b border-app-text/20 group-focus-within:border-app-text transition-colors">
-          <textarea id="message" v-model="form.message" name="message" rows="4" class="w-full bg-transparent text-app-text focus:outline-none py-2 font-light resize-none" required :disabled="isSubmitting"></textarea>
+        <div class="group py-2">
+          <label for="message" class="block text-xs font-light text-brand-brown mb-2 tracking-label uppercase transition-colors">Your Message</label>
+          <div class="relative border-b border-brand-brown">
+            <textarea id="message" v-model="form.message" name="message" rows="1" class="w-full bg-transparent text-brand-brown focus:outline-none py-2 font-light resize-none overflow-hidden peer" required :disabled="isSubmitting" @input="adjustHeight"></textarea>
+            <div class="absolute bottom-[-1px] left-0 w-full h-[2px] bg-brand-brown transform scale-x-0 origin-left transition-transform duration-300 peer-focus:scale-x-100"></div>
+          </div>
         </div>
-      </div>
-      <button type="submit" class="w-full py-6 button-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-app-text outline-none disabled:opacity-50 disabled:cursor-not-allowed" :disabled="isSubmitting">
-        {{ isSubmitting ? 'Sending...' : 'Send Inquiry' }}
-      </button>
-    </form>
+        <button type="submit" class="w-full py-6 bg-brand-brown text-brand-cream font-light uppercase tracking-widest-marketing transition-all border-2 border-transparent hover:bg-brand-sand hover:text-brand-cream hover:border-transparent cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-brown outline-none disabled:opacity-50 disabled:cursor-not-allowed" :disabled="isSubmitting">
+          {{ isSubmitting ? 'Sending...' : 'Send' }}
+        </button>
+      </form>
+    </div>
   </div>
 </template>

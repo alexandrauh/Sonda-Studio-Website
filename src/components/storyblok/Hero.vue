@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HeroBlok } from '../../types/storyblok'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import heroVideo from '../../assets/videos/hero-video.mp4'
 
@@ -10,67 +10,211 @@ const props = defineProps<{
 
 const route = useRoute()
 const isHome = route.name === 'home' || route.path === '/'
+const isServices = route.name === 'services' || route.path === '/services'
+const isContact = route.name === 'contact' || route.path === '/contact'
 
 const headline = computed(() => {
   let val = props.blok?.headline || (props.blok as any)?.Headline || ''
   return val.replace(/Sonda Studio(?!s)/gi, 'Sonda Studios')
 })
 
-const subheadline = computed(() => props.blok?.subheadline || (props.blok as any)?.Subheadline || '')
+const headlineWords = computed(() => headline.value.split(/\s+/).filter(Boolean))
+
+const subheadline = computed(() => {
+  const text = props.blok?.subheadline || (props.blok as any)?.Subheadline || ''
+  return text.replace(/(\s*)(Now live\.)/i, '\n$2')
+})
 const buttons = computed(() => props.blok?.buttons || (props.blok as any)?.Buttons || [])
 
 const getLink = (link: any) => {
   if (!link) return '#'
+  let url = '#'
   if (link.linktype === 'story') {
-    return link.cached_url ? `/${link.cached_url}` : '#'
+    url = link.cached_url ? `/${link.cached_url}` : '#'
+  } else {
+    url = link.url || '#'
   }
-  return link.url || '#'
+
+  // Force scroll to form for contact links
+  if (url === '/contact' || url === '/contact/') {
+    return '/contact#contact-form'
+  }
+
+  return url
 }
+
+const getButtonLabel = (button: any, index: number) => {
+  const label = button.label || (button as any).Label || ''
+  // Override second button to say "Services"
+  if (index === 1) return 'Services'
+  return label || 'Contact'
+}
+
+const getButtonLink = (button: any, index: number) => {
+  // Override second button to link to services
+  if (index === 1) return '/services'
+  return getLink(button.link || (button as any).Link)
+}
+
+const scrollToDiscover = () => {
+  const el = document.getElementById('01')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
+const animationReady = ref(false)
+onMounted(() => {
+  // Small delay ensures the browser paints the initial opacity:0 state
+  // before we transition to visible, so the animation is actually seen
+  setTimeout(() => {
+    animationReady.value = true
+  }, 300)
+})
 </script>
 
 <template>
   <div v-if="blok" v-editable="blok" class="w-full text-app-text transition-colors duration-500">
-    <!-- Hero Video Section -->
-    <section class="min-h-screen relative flex items-end justify-start p-8 md:p-16 overflow-hidden bg-app-bg">
-      <video
-        v-if="isHome"
-        :src="heroVideo"
-        class="absolute inset-0 w-full h-full object-cover z-0"
-        autoplay
-        loop
-        muted
-        playsinline
-      ></video>
-      <div class="relative z-10 w-full max-w-7xl mx-auto text-left">
-        <h1 
-          class="text-7xl md:text-8xl lg:text-display-giant font-normal mb-0 leading-[0.9]"
-          :style="{ fontFamily: isHome ? 'var(--font-serif)' : 'var(--font-sans)', color: isHome ? '#ffffff' : 'inherit' }"
-        >
-          {{ headline }}
-        </h1>
-      </div>
-    </section>
 
-    <!-- Sub-headline & Buttons Section -->
-    <section class="w-full bg-app-bg p-8 md:p-16">
-      <div class="max-w-7xl mx-auto flex flex-col items-start text-left">
-        <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
-          {{ subheadline }}
-        </p>
-        
-        <div v-if="buttons && buttons.length" class="flex flex-wrap items-center gap-8">
-          <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
-            <a 
-              :href="getLink(button.link || (button as any).Link)"
-              :class="[
-                index === 0 ? 'button-primary' : 'button-secondary'
-              ]"
-            >
-              {{ button.label || (button as any).Label || 'Discover' }}
-            </a>
-          </template>
+    <!-- ========== HOME PAGE HERO ========== -->
+    <div v-if="isHome" class="relative">
+      <!-- Video Section (80vh) -->
+      <section class="relative h-[90vh] overflow-hidden bg-app-bg">
+        <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
+          <video
+            :src="heroVideo"
+            class="absolute inset-0 w-full h-full object-cover"
+            autoplay
+            loop
+            muted
+            playsinline
+          ></video>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- Headline spanning both sections -->
+      <h1
+        class="hero-headline absolute left-0 w-full px-8 md:px-16 z-20 leading-[0.9] pointer-events-none"
+        :style="{ fontFamily: 'var(--font-serif)', color: '#ffffff' }"
+      >
+        <span
+          v-for="(word, i) in headlineWords"
+          :key="i"
+          class="hero-word inline-block mr-[0.3em]"
+          :class="{ 'hero-word-visible': animationReady }"
+          :style="{ transitionDelay: `${i * 500}ms` }"
+        >{{ word }}</span>
+      </h1>
+
+      <!-- Brown Section: subheadline + buttons -->
+      <section class="relative w-full bg-app-bg px-8 md:px-16 pb-16 md:pb-20 text-left z-10">
+        <div class="hero-content-spacer"></div>
+        <div class="max-w-7xl">
+          <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
+            {{ subheadline }}
+          </p>
+          
+          <div v-if="buttons && buttons.length" class="flex flex-wrap items-center justify-start gap-8">
+            <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
+              <router-link 
+                :to="getButtonLink(button, index)"
+                :class="[
+                  index === 0 ? 'button-primary' : 'button-secondary'
+                ]"
+              >
+                {{ getButtonLabel(button, index) }}
+              </router-link>
+            </template>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========== CONTACT PAGE HERO (original layout) ========== -->
+    <template v-if="isContact">
+      <section class="relative flex p-8 md:p-16 min-h-screen items-end justify-start text-left bg-app-bg">
+        <div class="relative z-10 w-full max-w-7xl mx-auto">
+          <h1 
+            class="text-7xl md:text-8xl lg:text-display-giant font-normal mb-0 leading-[0.9]"
+            :style="{ fontFamily: 'var(--font-sans)', color: 'inherit' }"
+          >
+            {{ headline }}
+          </h1>
+        </div>
+      </section>
+      <section class="w-full bg-app-bg p-8 md:p-16 text-left">
+        <div class="max-w-7xl mx-auto flex flex-col items-start text-left">
+          <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
+            {{ subheadline }}
+          </p>
+          <div v-if="buttons && buttons.length" class="flex flex-wrap items-center justify-start gap-8">
+            <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
+              <router-link 
+                :to="getLink(button.link || (button as any).Link)"
+                :class="[
+                  index === 0 ? 'button-primary' : 'button-secondary'
+                ]"
+              >
+                {{ button.label || (button as any).Label || 'Discover' }}
+              </router-link>
+            </template>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <!-- ========== SERVICES PAGE HERO (unchanged) ========== -->
+    <template v-if="isServices">
+      <section 
+        class="relative flex overflow-hidden p-8 md:p-16 min-h-[70vh] flex-col items-center justify-start text-center pt-[25vh] md:pt-[30vh] pb-32 md:pb-48 bg-app-bg"
+      >
+        <div 
+          class="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center"
+        >
+          <h1 
+            class="text-7xl md:text-8xl lg:text-display-giant font-normal mb-0 leading-[0.9]"
+            :style="{ fontFamily: 'var(--font-sans)', color: 'inherit' }"
+          >
+            {{ headline }}
+          </h1>
+          
+          <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mt-6 tracking-normal whitespace-pre-line">
+            {{ subheadline }}
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-8 mt-10">
+            <a href="#" @click.prevent="scrollToDiscover" class="button-primary">Discover</a>
+            <router-link to="/contact#contact-form" class="button-secondary">Contact us</router-link>
+          </div>
+        </div>
+      </section>
+    </template>
   </div>
 </template>
+
+<style scoped>
+/* Headline positioned to straddle the boundary between video and brown sections.
+   Bottom of the video section is the anchor point; the headline sits so that
+   roughly 50% is on the video and 50% on the brown section. */
+.hero-headline {
+  font-size: clamp(4rem, 12vw, 10rem);
+  /* Position at the bottom of the 90vh video section,
+     then pull up by ~55% so headline straddles the boundary */
+  top: 90vh;
+  transform: translateY(-55%);
+}
+
+/* Spacer in the brown section so the subheadline + buttons start below the headline */
+.hero-content-spacer {
+  height: clamp(4rem, 8vw, 8rem);
+}
+
+/* Per-word fade-in animation */
+.hero-word {
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-word-visible {
+  opacity: 1;
+}
+</style>

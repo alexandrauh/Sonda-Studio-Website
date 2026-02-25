@@ -35,7 +35,23 @@ const router = createRouter({
             name: 'contact',
             component: () => import('../views/ContactView.vue')
         }
-    ]
+    ],
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        }
+        if (to.hash) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        el: to.hash,
+                        behavior: 'smooth'
+                    })
+                }, 400) // Wait for Suspense/Storyblok to mount
+            })
+        }
+        return { top: 0 }
+    }
 })
 
 export default router
