@@ -52,3 +52,22 @@ export interface TestimonialBlok extends StoryblokComponentBlok {
 export interface ContactFormBlok extends StoryblokComponentBlok {
     title: string;
 }
+
+export interface InstagramReelItemBlok extends StoryblokComponentBlok {
+    title?: string;
+    reel_link?: any;
+    thumbnail?: {
+        filename?: string;
+        alt?: string;
+    };
+    thumbnail_alt?: string;
+}
+
+export interface InstagramReelsBlok extends StoryblokComponentBlok {
+    kicker?: string;
+    headline?: string;
+    intro?: string;
+    profile_link?: any;
+    profile_label?: string;
+    reels?: InstagramReelItemBlok[];
+}

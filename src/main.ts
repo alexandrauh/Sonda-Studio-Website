@@ -13,6 +13,7 @@ import Project from './components/storyblok/Project.vue'
 import ContactForm from './components/storyblok/ContactForm.vue'
 import Testimonial from './components/storyblok/Testimonial.vue'
 import FallbackComponent from './components/storyblok/FallbackComponent.vue'
+import InstagramReels from './components/storyblok/InstagramReels.vue'
 
 const app = createApp(App)
 
@@ -35,6 +36,9 @@ const components = {
     ContactForm: ContactForm,
     testimonial: Testimonial,
     Testimonial: Testimonial,
+    instagram_reels: InstagramReels,
+    InstagramReels: InstagramReels,
+    Instagram_Reels: InstagramReels,
     fallback: FallbackComponent,
     Fallback: FallbackComponent
 }
