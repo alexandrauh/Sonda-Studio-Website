@@ -7,7 +7,11 @@
             ],
             "env": {
                 "STORYBLOK_SPACE_ID": "290135578248163",
-                "STORYBLOK_PERSONAL_TOKEN": "QaQFtIIOTBHc0ZnZi1QIVgtt-138569498116790-kstd2bdSsBh2c9XHGosu"
+                "STORYBLOK_MANAGEMENT_TOKEN": "QaQFtIIOTBHc0ZnZi1QIVgtt-138569498116790-kstd2bdSsBh2c9XHGosu",
+                "STORYBLOK_PERSONAL_TOKEN": "QaQFtIIOTBHc0ZnZi1QIVgtt-138569498116790-kstd2bdSsBh2c9XHGosu",
+                "STORYBLOK_DEFAULT_PUBLIC_TOKEN": "Yexn5T5O42nspXazkIspoQtt",
+                "PUBLIC_TOKEN": "Yexn5T5O42nspXazkIspoQtt",
+                "MANAGEMENT_TOKEN": "QaQFtIIOTBHc0ZnZi1QIVgtt-138569498116790-kstd2bdSsBh2c9XHGosu"
             }
         }
     }

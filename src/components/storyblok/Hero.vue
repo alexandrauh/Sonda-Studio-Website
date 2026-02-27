@@ -12,6 +12,7 @@ const route = useRoute()
 const isHome = route.name === 'home' || route.path === '/'
 const isServices = route.name === 'services' || route.path === '/services'
 const isContact = route.name === 'contact' || route.path === '/contact'
+const isWork = route.name === 'work' || route.path === '/work'
 
 const headline = computed(() => {
   let val = props.blok?.headline || (props.blok as any)?.Headline || ''
@@ -22,7 +23,22 @@ const headlineWords = computed(() => headline.value.split(/\s+/).filter(Boolean)
 
 const subheadline = computed(() => {
   const text = props.blok?.subheadline || (props.blok as any)?.Subheadline || ''
+  // If it's the home page and has the "About" text, we handle it specially
+  if (isHome && text.includes('About (Heading)')) {
+    return text
+  }
   return text.replace(/(\s*)(Now live\.)/i, '\n$2')
+})
+
+const subheadlineSections = computed(() => {
+  const text = subheadline.value
+  if (isHome && text.includes('About (Heading)')) {
+    const lines = text.split('\n')
+    const heading = lines[0]
+    const content = lines.slice(1).join('\n')
+    return { heading, content }
+  }
+  return null
 })
 const buttons = computed(() => props.blok?.buttons || (props.blok as any)?.Buttons || [])
 
@@ -94,6 +110,7 @@ onMounted(() => {
 
       <!-- Headline spanning both sections -->
       <h1
+        v-if="headlineWords.length"
         class="hero-headline absolute left-0 w-full px-8 md:px-16 z-20 leading-[0.9] pointer-events-none"
         :style="{ fontFamily: 'var(--font-serif)', color: '#ffffff' }"
       >
@@ -110,7 +127,20 @@ onMounted(() => {
       <section class="relative w-full bg-app-bg px-8 md:px-16 pb-16 md:pb-20 text-left z-10">
         <div class="hero-content-spacer"></div>
         <div class="max-w-7xl">
-          <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
+          <div v-if="subheadlineSections" class="mb-12">
+            <h2 class="text-xs uppercase tracking-[0.3em] font-light text-brand-sand mb-8">{{ subheadlineSections.heading }}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
+              <p class="text-lg md:text-xl text-app-text/90 font-light leading-relaxed tracking-wide whitespace-pre-line">
+                {{ subheadlineSections.content.split('\n\n')[0] }}
+              </p>
+              <div class="flex flex-col gap-8">
+                <p v-for="(p, i) in subheadlineSections.content.split('\n\n').slice(1)" :key="i" class="text-lg md:text-xl text-app-text/70 font-light leading-relaxed tracking-wide whitespace-pre-line">
+                  {{ p }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <p v-else-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
             {{ subheadline }}
           </p>
           
@@ -163,8 +193,7 @@ onMounted(() => {
       </section>
     </template>
 
-    <!-- ========== SERVICES PAGE HERO (unchanged) ========== -->
-    <template v-if="isServices">
+    <template v-if="isServices || isWork">
       <section 
         class="relative flex overflow-hidden p-8 md:p-16 min-h-[70vh] flex-col items-center justify-start text-center pt-[25vh] md:pt-[30vh] pb-32 md:pb-48 bg-app-bg"
       >

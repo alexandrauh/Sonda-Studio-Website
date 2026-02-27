@@ -8,7 +8,7 @@ import { google } from '@ai-sdk/google';
 export function storyblok(server: McpServer) {
   server.tool('ping', {}, async () => {
     try {
-      await axios.get(`${CDN_BASE}/spaces/${process.env.STORYBLOK_SPACE_ID}?token=${PUBLIC_TOKEN}`);
+      await axios.get(`${CDN_BASE}/spaces/${"290135578248163"}?token=${PUBLIC_TOKEN}`);
       return { content: [{ type: 'text', text: 'Server is running and Storyblok API is reachable.' }] };
     } catch (error: any) {
       return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
@@ -224,8 +224,8 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('create_release', { 
-    name: z.string(), 
+  server.tool('create_release', {
+    name: z.string(),
     publish_at: z.string().optional(),
     branches_to_deploy: z.array(z.number()).optional(),
     timezone: z.string().optional(),
@@ -262,7 +262,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('update_release', { 
+  server.tool('update_release', {
     release_id: z.string(),
     name: z.string().optional(),
     release_at: z.string().optional(),
@@ -278,16 +278,16 @@ export function storyblok(server: McpServer) {
       if (branches_to_deploy) releaseData.branches_to_deploy = branches_to_deploy;
       if (timezone) releaseData.timezone = timezone;
       if (users_to_notify_ids) releaseData.users_to_notify_ids = users_to_notify_ids;
-      
-      const requestData: any = { 
-        release: releaseData 
+
+      const requestData: any = {
+        release: releaseData
       };
-      
+
       if (do_release !== undefined) requestData.do_release = do_release;
-      
+
       const res = await axios.put(
-        buildURL(MANAGEMENT_BASE, `releases/${release_id}`), 
-        requestData, 
+        buildURL(MANAGEMENT_BASE, `releases/${release_id}`),
+        requestData,
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -512,7 +512,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('create_datasource', { 
+  server.tool('create_datasource', {
     name: z.string(),
     slug: z.string(),
     dimensions_attributes: z.array(
@@ -530,7 +530,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('update_datasource', { 
+  server.tool('update_datasource', {
     id: z.string(),
     name: z.string().optional(),
     slug: z.string().optional(),
@@ -558,7 +558,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('fetch_datasource_entries', { 
+  server.tool('fetch_datasource_entries', {
     datasource_id: z.string(),
     page: z.number().optional(),
     per_page: z.number().optional()
@@ -572,7 +572,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('get_datasource_entry', { 
+  server.tool('get_datasource_entry', {
     entry_id: z.string()
   }, async ({ entry_id }) => {
     try {
@@ -583,7 +583,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('create_datasource_entry', { 
+  server.tool('create_datasource_entry', {
     datasource_id: z.string(),
     name: z.string(),
     value: z.string(),
@@ -599,7 +599,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('update_datasource_entry', { 
+  server.tool('update_datasource_entry', {
     entry_id: z.string(),
     name: z.string().optional(),
     value: z.string().optional(),
@@ -611,10 +611,10 @@ export function storyblok(server: McpServer) {
       if (name !== undefined) entryData.name = name;
       if (value !== undefined) entryData.value = value;
       if (dimension_value !== undefined) entryData.dimension_value = dimension_value;
-      
+
       const payload: any = { datasource_entry: entryData };
       if (dimension_id !== undefined) payload.dimension_id = dimension_id;
-      
+
       const res = await axios.put(buildURL(MANAGEMENT_BASE, `datasource_entries/${entry_id}`), payload, { headers: getHeaders(MANAGEMENT_TOKEN) });
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
     } catch (error: any) {
@@ -622,7 +622,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('delete_datasource_entry', { 
+  server.tool('delete_datasource_entry', {
     entry_id: z.string()
   }, async ({ entry_id }) => {
     try {
@@ -725,8 +725,8 @@ export function storyblok(server: McpServer) {
   }, async ({ story_id, lang }) => {
     try {
       const res = await axios.put(
-        buildURL(MANAGEMENT_BASE, `stories/${story_id}/ai_translate`), 
-        { lang, code: lang, overwrite: false }, 
+        buildURL(MANAGEMENT_BASE, `stories/${story_id}/ai_translate`),
+        { lang, code: lang, overwrite: false },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data) }] };
@@ -957,8 +957,8 @@ export function storyblok(server: McpServer) {
   }, async (params) => {
     try {
       const res = await axios.post(
-        buildURL(MANAGEMENT_BASE, 'webhook_endpoints'), 
-        { webhook_endpoint: params }, 
+        buildURL(MANAGEMENT_BASE, 'webhook_endpoints'),
+        { webhook_endpoint: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -977,8 +977,8 @@ export function storyblok(server: McpServer) {
   }, async ({ id, ...params }) => {
     try {
       const res = await axios.put(
-        buildURL(MANAGEMENT_BASE, `webhook_endpoints/${id}`), 
-        { webhook_endpoint: params }, 
+        buildURL(MANAGEMENT_BASE, `webhook_endpoints/${id}`),
+        { webhook_endpoint: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1020,8 +1020,8 @@ export function storyblok(server: McpServer) {
   }, async (params) => {
     try {
       const res = await axios.post(
-        buildURL(MANAGEMENT_BASE, 'component_groups'), 
-        { component_group: params }, 
+        buildURL(MANAGEMENT_BASE, 'component_groups'),
+        { component_group: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1037,8 +1037,8 @@ export function storyblok(server: McpServer) {
   }, async ({ id, ...params }) => {
     try {
       const res = await axios.put(
-        buildURL(MANAGEMENT_BASE, `component_groups/${id}`), 
-        { component_group: params }, 
+        buildURL(MANAGEMENT_BASE, `component_groups/${id}`),
+        { component_group: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1160,7 +1160,7 @@ export function storyblok(server: McpServer) {
     }).optional()
   }, async ({ space_id, ...params }) => {
     try {
-      const res = await axios.put(buildURL(SPACES_BASE, space_id), { space: params }, 
+      const res = await axios.put(buildURL(SPACES_BASE, space_id), { space: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) });
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
     } catch (error: any) {
@@ -1172,7 +1172,7 @@ export function storyblok(server: McpServer) {
     space_id: z.string()
   }, async ({ space_id }) => {
     try {
-      await axios.delete(buildURL(SPACES_BASE, space_id), 
+      await axios.delete(buildURL(SPACES_BASE, space_id),
         { headers: getHeaders(MANAGEMENT_TOKEN) });
       return { content: [{ type: 'text', text: `Space ${space_id} has been successfully deleted.` }] };
     } catch (error: any) {
@@ -1187,14 +1187,14 @@ export function storyblok(server: McpServer) {
     create_components: z.boolean().optional()
   }, async ({ space_id, name, duplicate_content = true, create_components = true }) => {
     try {
-      const res = await axios.post(buildURL(SPACES_BASE, `${space_id}/duplicate`), 
-        { 
-          duplicate: { 
+      const res = await axios.post(buildURL(SPACES_BASE, `${space_id}/duplicate`),
+        {
+          duplicate: {
             name,
             duplicate_content,
             create_components
-          } 
-        }, 
+          }
+        },
         { headers: getHeaders(MANAGEMENT_TOKEN) });
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
     } catch (error: any) {
@@ -1206,14 +1206,23 @@ export function storyblok(server: McpServer) {
     space_id: z.string(),
   }, async ({ space_id }) => {
     try {
-      const res = await axios.post(buildURL(SPACES_BASE, `${space_id}/backup`), 
-        {}, 
+      const res = await axios.post(buildURL(SPACES_BASE, `${space_id}/backup`),
+        {},
         { headers: getHeaders(MANAGEMENT_TOKEN) });
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
     } catch (error: any) {
       return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
     }
   });
+
+  // =============================================================================
+  // DISABLED: Space Roles, Workflows, Workflow Stages, Workflow Stage Changes
+  // (19 tools removed to stay under 100 tool limit)
+  // To re-enable, uncomment the sections below and rebuild.
+  // =============================================================================
+
+  /*
+  // --- Space Roles Management (5 tools) ---
 
   server.tool('fetch_space_roles', {}, async () => {
     try {
@@ -1285,6 +1294,8 @@ export function storyblok(server: McpServer) {
     }
   });
 
+  // --- Workflow Management (6 tools) ---
+
   server.tool('fetch_workflows', {
     page: z.number().optional(),
     per_page: z.number().optional()
@@ -1353,6 +1364,8 @@ export function storyblok(server: McpServer) {
       return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
     }
   });
+
+  // --- Workflow Stage Management (5 tools) ---
 
   server.tool('fetch_workflow_stages', {}, async () => {
     try {
@@ -1440,6 +1453,8 @@ export function storyblok(server: McpServer) {
     }
   });
 
+  // --- Workflow Stage Changes Management (3 tools) ---
+
   server.tool('fetch_workflow_stage_changes', {
     with_story: z.string().optional()
   }, async ({ with_story }) => {
@@ -1476,6 +1491,7 @@ export function storyblok(server: McpServer) {
       return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
     }
   });
+  */ // END DISABLED SECTION
 
   server.tool('fetch_branches', {
     page: z.number().optional(),
@@ -1499,7 +1515,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('create_branch', { 
+  server.tool('create_branch', {
     name: z.string(),
     source_id: z.number().nullable().optional(),
     url: z.string().optional(),
@@ -1507,8 +1523,8 @@ export function storyblok(server: McpServer) {
   }, async (params) => {
     try {
       const res = await axios.post(
-        buildURL(MANAGEMENT_BASE, 'branches'), 
-        { branch: params }, 
+        buildURL(MANAGEMENT_BASE, 'branches'),
+        { branch: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1517,7 +1533,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('update_branch', { 
+  server.tool('update_branch', {
     id: z.string(),
     name: z.string().optional(),
     source_id: z.number().nullable().optional(),
@@ -1526,8 +1542,8 @@ export function storyblok(server: McpServer) {
   }, async ({ id, ...params }) => {
     try {
       const res = await axios.put(
-        buildURL(MANAGEMENT_BASE, `branches/${id}`), 
-        { branch: params }, 
+        buildURL(MANAGEMENT_BASE, `branches/${id}`),
+        { branch: params },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1554,7 +1570,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('get_branch_stories', { 
+  server.tool('get_branch_stories', {
     id: z.string(),
     page: z.number().optional(),
     per_page: z.number().optional(),
@@ -1569,7 +1585,7 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('compare_branches', { 
+  server.tool('compare_branches', {
     source_id: z.string(),
     target_id: z.string(),
     page: z.number().optional(),
@@ -1584,15 +1600,15 @@ export function storyblok(server: McpServer) {
     }
   });
 
-  server.tool('copy_stories_between_branches', { 
+  server.tool('copy_stories_between_branches', {
     source_branch_id: z.string(),
     target_branch_id: z.string(),
     story_ids: z.array(z.number())
   }, async ({ source_branch_id, target_branch_id, story_ids }) => {
     try {
       const res = await axios.post(
-        buildURL(MANAGEMENT_BASE, `branches/${target_branch_id}/stories/copy`), 
-        { source_branch_id, story_ids }, 
+        buildURL(MANAGEMENT_BASE, `branches/${target_branch_id}/stories/copy`),
+        { source_branch_id, story_ids },
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
@@ -1623,10 +1639,10 @@ export function storyblok(server: McpServer) {
       if (release_uuids && release_uuids.length > 0) {
         payload.release_uuids = release_uuids;
       }
-      
+
       const res = await axios.post(
-        buildURL(MANAGEMENT_BASE, 'deployments'), 
-        payload, 
+        buildURL(MANAGEMENT_BASE, 'deployments'),
+        payload,
         { headers: getHeaders(MANAGEMENT_TOKEN) }
       );
       return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };

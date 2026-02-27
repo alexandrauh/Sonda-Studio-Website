@@ -61,6 +61,7 @@ const closeMenu = () => {
 const navLinks = [
   // { path: '/about', label: 'About' },
   { path: '/services', label: 'Services' },
+  { path: '/work', label: 'Work' },
   // { path: '/portfolio', label: 'Portfolio' },
   // { path: '/clients', label: 'Clients' },
   { path: '/contact', label: 'Contact' }

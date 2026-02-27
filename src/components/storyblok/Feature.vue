@@ -82,10 +82,10 @@ const isSecondary = computed(() => {
       :style="{ transform: `translateY(${parallaxY}px)`, opacity: textOpacity }"
     >
       <div class="max-w-5xl mx-auto w-full relative">
-        <div v-if="formattedIndex" aria-hidden="true" class="absolute -top-12 md:-top-16 left-0 opacity-20 font-sans text-xl md:text-2xl lg:text-3xl tracking-widest">
+        <div v-if="formattedIndex && title.trim()" aria-hidden="true" class="absolute -top-12 md:-top-16 left-0 opacity-20 font-sans text-xl md:text-2xl lg:text-3xl tracking-widest">
            {{ formattedIndex }}
         </div>
-        <div class="relative w-full">
+        <div class="relative w-full" v-if="title.trim()">
           <h2 class="text-6xl md:text-8xl lg:text-[6rem] font-normal mb-16 leading-[1.1] tracking-tighter relative inline-block"
               :class="[isSecondary ? 'text-[var(--color-brand-brown)]' : 'text-app-text']">
             <div 

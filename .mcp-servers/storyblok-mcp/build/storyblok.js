@@ -6,7 +6,7 @@ import { google } from '@ai-sdk/google';
 export function storyblok(server) {
     server.tool('ping', {}, async () => {
         try {
-            await axios.get(`${CDN_BASE}/spaces/${process.env.STORYBLOK_SPACE_ID}?token=${PUBLIC_TOKEN}`);
+            await axios.get(`${CDN_BASE}/spaces/${"290135578248163"}?token=${PUBLIC_TOKEN}`);
             return { content: [{ type: 'text', text: 'Server is running and Storyblok API is reachable.' }] };
         }
         catch (error) {
@@ -1202,256 +1202,282 @@ export function storyblok(server) {
             return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
         }
     });
+    // =============================================================================
+    // DISABLED: Space Roles, Workflows, Workflow Stages, Workflow Stage Changes
+    // (19 tools removed to stay under 100 tool limit)
+    // To re-enable, uncomment the sections below and rebuild.
+    // =============================================================================
+    /*
+    // --- Space Roles Management (5 tools) ---
+  
     server.tool('fetch_space_roles', {}, async () => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, 'space_roles'), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, 'space_roles'), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('get_space_role', { id: z.string() }, async ({ id }) => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('create_space_role', {
-        role: z.string(),
-        subtitle: z.string().optional(),
-        permissions: z.array(z.string()).optional(),
-        field_permissions: z.array(z.string()).optional(),
-        readonly_field_permissions: z.array(z.string()).optional(),
-        allowed_paths: z.array(z.number()).optional(),
-        datasource_ids: z.array(z.number()).optional(),
-        component_ids: z.array(z.number()).optional(),
-        branch_ids: z.array(z.number()).optional(),
-        allowed_languages: z.array(z.string()).optional(),
-        asset_folder_ids: z.array(z.number()).optional()
+      role: z.string(),
+      subtitle: z.string().optional(),
+      permissions: z.array(z.string()).optional(),
+      field_permissions: z.array(z.string()).optional(),
+      readonly_field_permissions: z.array(z.string()).optional(),
+      allowed_paths: z.array(z.number()).optional(),
+      datasource_ids: z.array(z.number()).optional(),
+      component_ids: z.array(z.number()).optional(),
+      branch_ids: z.array(z.number()).optional(),
+      allowed_languages: z.array(z.string()).optional(),
+      asset_folder_ids: z.array(z.number()).optional()
     }, async (params) => {
-        try {
-            const res = await axios.post(buildURL(MANAGEMENT_BASE, 'space_roles'), { space_role: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.post(buildURL(MANAGEMENT_BASE, 'space_roles'), { space_role: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('update_space_role', {
-        id: z.string(),
-        role: z.string().optional(),
-        subtitle: z.string().optional(),
-        permissions: z.array(z.string()).optional(),
-        field_permissions: z.array(z.string()).optional(),
-        readonly_field_permissions: z.array(z.string()).optional(),
-        allowed_paths: z.array(z.number()).optional(),
-        datasource_ids: z.array(z.number()).optional(),
-        component_ids: z.array(z.number()).optional(),
-        branch_ids: z.array(z.number()).optional(),
-        allowed_languages: z.array(z.string()).optional(),
-        asset_folder_ids: z.array(z.number()).optional()
+      id: z.string(),
+      role: z.string().optional(),
+      subtitle: z.string().optional(),
+      permissions: z.array(z.string()).optional(),
+      field_permissions: z.array(z.string()).optional(),
+      readonly_field_permissions: z.array(z.string()).optional(),
+      allowed_paths: z.array(z.number()).optional(),
+      datasource_ids: z.array(z.number()).optional(),
+      component_ids: z.array(z.number()).optional(),
+      branch_ids: z.array(z.number()).optional(),
+      allowed_languages: z.array(z.string()).optional(),
+      asset_folder_ids: z.array(z.number()).optional()
     }, async ({ id, ...params }) => {
-        try {
-            const res = await axios.put(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { space_role: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.put(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { space_role: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('delete_space_role', { id: z.string() }, async ({ id }) => {
-        try {
-            await axios.delete(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: `Space role ${id} has been successfully deleted.` }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        await axios.delete(buildURL(MANAGEMENT_BASE, `space_roles/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: `Space role ${id} has been successfully deleted.` }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
+    // --- Workflow Management (6 tools) ---
+  
     server.tool('fetch_workflows', {
-        page: z.number().optional(),
-        per_page: z.number().optional()
+      page: z.number().optional(),
+      per_page: z.number().optional()
     }, async (params) => {
-        try {
-            const q = toQuery(params);
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflows${q}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const q = toQuery(params);
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflows${q}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('get_workflow', { id: z.string() }, async ({ id }) => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('create_workflow', {
-        name: z.string(),
-        content_types: z.array(z.string())
+      name: z.string(),
+      content_types: z.array(z.string())
     }, async (params) => {
-        try {
-            const res = await axios.post(buildURL(MANAGEMENT_BASE, 'workflows'), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.post(buildURL(MANAGEMENT_BASE, 'workflows'), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('update_workflow', {
-        id: z.string(),
-        name: z.string().optional(),
-        content_types: z.array(z.string()).optional()
+      id: z.string(),
+      name: z.string().optional(),
+      content_types: z.array(z.string()).optional()
     }, async ({ id, ...params }) => {
-        try {
-            const res = await axios.put(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.put(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+    
     server.tool('duplicate_workflow', {
-        id: z.string(),
-        name: z.string(),
-        content_types: z.array(z.string())
+      id: z.string(),
+      name: z.string(),
+      content_types: z.array(z.string())
     }, async ({ id, ...params }) => {
-        try {
-            const res = await axios.post(buildURL(MANAGEMENT_BASE, `workflows/${id}/duplicate`), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.post(buildURL(MANAGEMENT_BASE, `workflows/${id}/duplicate`), { workflow: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+    
     server.tool('delete_workflow', { id: z.string() }, async ({ id }) => {
-        try {
-            await axios.delete(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: `Workflow ${id} has been successfully deleted.` }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        await axios.delete(buildURL(MANAGEMENT_BASE, `workflows/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: `Workflow ${id} has been successfully deleted.` }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
+    // --- Workflow Stage Management (5 tools) ---
+  
     server.tool('fetch_workflow_stages', {}, async () => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, 'workflow_stages'), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, 'workflow_stages'), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('get_workflow_stage', { id: z.string() }, async ({ id }) => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('create_workflow_stage', {
-        name: z.string(),
-        color: z.string().optional(),
-        position: z.number().optional(),
-        is_default: z.boolean().optional(),
-        allow_publish: z.boolean().optional(),
-        allow_all_users: z.boolean().optional(),
-        allow_all_stages: z.boolean().optional(),
-        allow_admin_publish: z.boolean().optional(),
-        allow_admin_change: z.boolean().optional(),
-        allow_editor_change: z.boolean().optional(),
-        user_ids: z.array(z.number()).optional(),
-        space_role_ids: z.array(z.number()).optional(),
-        workflow_stage_ids: z.array(z.number()).optional(),
-        after_publish_id: z.number().optional(),
-        workflow_id: z.number().optional()
+      name: z.string(),
+      color: z.string().optional(),
+      position: z.number().optional(),
+      is_default: z.boolean().optional(),
+      allow_publish: z.boolean().optional(),
+      allow_all_users: z.boolean().optional(),
+      allow_all_stages: z.boolean().optional(),
+      allow_admin_publish: z.boolean().optional(),
+      allow_admin_change: z.boolean().optional(),
+      allow_editor_change: z.boolean().optional(),
+      user_ids: z.array(z.number()).optional(),
+      space_role_ids: z.array(z.number()).optional(),
+      workflow_stage_ids: z.array(z.number()).optional(),
+      after_publish_id: z.number().optional(),
+      workflow_id: z.number().optional()
     }, async (params) => {
-        try {
-            const res = await axios.post(buildURL(MANAGEMENT_BASE, 'workflow_stages'), { workflow_stage: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.post(
+          buildURL(MANAGEMENT_BASE, 'workflow_stages'),
+          { workflow_stage: params },
+          { headers: getHeaders(MANAGEMENT_TOKEN) }
+        );
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('update_workflow_stage', {
-        id: z.string(),
-        name: z.string().optional(),
-        color: z.string().optional(),
-        position: z.number().optional(),
-        is_default: z.boolean().optional(),
-        allow_publish: z.boolean().optional(),
-        allow_all_users: z.boolean().optional(),
-        allow_all_stages: z.boolean().optional(),
-        allow_admin_publish: z.boolean().optional(),
-        allow_admin_change: z.boolean().optional(),
-        allow_editor_change: z.boolean().optional(),
-        user_ids: z.array(z.number()).optional(),
-        space_role_ids: z.array(z.number()).optional(),
-        workflow_stage_ids: z.array(z.number()).optional(),
-        after_publish_id: z.number().optional(),
-        workflow_id: z.number().optional()
+      id: z.string(),
+      name: z.string().optional(),
+      color: z.string().optional(),
+      position: z.number().optional(),
+      is_default: z.boolean().optional(),
+      allow_publish: z.boolean().optional(),
+      allow_all_users: z.boolean().optional(),
+      allow_all_stages: z.boolean().optional(),
+      allow_admin_publish: z.boolean().optional(),
+      allow_admin_change: z.boolean().optional(),
+      allow_editor_change: z.boolean().optional(),
+      user_ids: z.array(z.number()).optional(),
+      space_role_ids: z.array(z.number()).optional(),
+      workflow_stage_ids: z.array(z.number()).optional(),
+      after_publish_id: z.number().optional(),
+      workflow_id: z.number().optional()
     }, async ({ id, ...params }) => {
-        try {
-            const res = await axios.put(buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`), { workflow_stage: params }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.put(
+          buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`),
+          { workflow_stage: params },
+          { headers: getHeaders(MANAGEMENT_TOKEN) }
+        );
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('delete_workflow_stage', { id: z.string() }, async ({ id }) => {
-        try {
-            await axios.delete(buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: `Workflow stage ${id} has been successfully deleted.` }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        await axios.delete(buildURL(MANAGEMENT_BASE, `workflow_stages/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: `Workflow stage ${id} has been successfully deleted.` }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
+    // --- Workflow Stage Changes Management (3 tools) ---
+  
     server.tool('fetch_workflow_stage_changes', {
-        with_story: z.string().optional()
+      with_story: z.string().optional()
     }, async ({ with_story }) => {
-        try {
-            const q = with_story ? `?with_story=${with_story}` : '';
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stage_changes${q}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const q = with_story ? `?with_story=${with_story}` : '';
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stage_changes${q}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('create_workflow_stage_change', {
-        workflow_stage_id: z.number(),
-        story_id: z.number()
+      workflow_stage_id: z.number(),
+      story_id: z.number()
     }, async ({ workflow_stage_id, story_id }) => {
-        try {
-            const res = await axios.post(buildURL(MANAGEMENT_BASE, 'workflow_stage_changes'), { workflow_stage_change: { workflow_stage_id, story_id } }, { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.post(
+          buildURL(MANAGEMENT_BASE, 'workflow_stage_changes'),
+          { workflow_stage_change: { workflow_stage_id, story_id } },
+          { headers: getHeaders(MANAGEMENT_TOKEN) }
+        );
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+  
     server.tool('get_workflow_stage_change', { id: z.string() }, async ({ id }) => {
-        try {
-            const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stage_changes/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
-            return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
-        }
-        catch (error) {
-            return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
-        }
+      try {
+        const res = await axios.get(buildURL(MANAGEMENT_BASE, `workflow_stage_changes/${id}`), { headers: getHeaders(MANAGEMENT_TOKEN) });
+        return { content: [{ type: 'text', text: JSON.stringify(res.data, null, 2) }] };
+      } catch (error: any) {
+        return { isError: true, content: [{ type: 'text', text: `Error: ${error.message}` }] };
+      }
     });
+    */ // END DISABLED SECTION
     server.tool('fetch_branches', {
         page: z.number().optional(),
         per_page: z.number().optional()
