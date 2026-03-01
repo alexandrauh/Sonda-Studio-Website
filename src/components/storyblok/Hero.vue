@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HeroBlok } from '../../types/storyblok'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import heroVideo from '../../assets/videos/hero-video.mp4'
 
@@ -50,23 +50,46 @@ const scrollToDiscover = () => {
   }
 }
 
-const animationReady = ref(false)
+const homeHeroRoot = ref<HTMLElement | null>(null)
+const hasScrolledDown = ref(false)
+
+const handleHomeScroll = () => {
+  hasScrolledDown.value = window.scrollY > 24
+}
+
+const scrollToNextSection = () => {
+  const nextSection = homeHeroRoot.value?.nextElementSibling as HTMLElement | null
+  if (nextSection) {
+    nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    return
+  }
+
+  window.scrollTo({
+    top: window.scrollY + window.innerHeight,
+    behavior: 'smooth'
+  })
+}
+
 onMounted(() => {
-  // Small delay ensures the browser paints the initial opacity:0 state
-  // before we transition to visible, so the animation is actually seen
-  setTimeout(() => {
-    animationReady.value = true
-  }, 300)
+  if (!isHome) return
+
+  handleHomeScroll()
+  window.addEventListener('scroll', handleHomeScroll, { passive: true })
+})
+
+onUnmounted(() => {
+  if (!isHome) return
+  window.removeEventListener('scroll', handleHomeScroll)
 })
 </script>
 
 <template>
-  <div v-if="blok" v-editable="blok" class="w-full text-app-text transition-colors duration-500">
+  <div v-if="blok" ref="homeHeroRoot" v-editable="blok" class="w-full text-app-text transition-colors duration-500">
 
     <!-- ========== HOME PAGE HERO ========== -->
     <div v-if="isHome" class="relative">
-      <!-- Video Section (90vh) - Now the pure hero -->
-      <section class="relative h-[90vh] overflow-hidden bg-app-bg">
+      <!-- Video Section (100svh) - pure visual hero -->
+      <section class="relative h-screen h-[100svh] overflow-hidden bg-app-bg">
         <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
           <video
             :src="heroVideo"
@@ -77,6 +100,19 @@ onMounted(() => {
             playsinline
           ></video>
         </div>
+
+        <button
+          type="button"
+          aria-label="Scroll down"
+          class="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-3 text-app-text/70 transition-all duration-500 hover:text-app-text focus-visible:outline-none"
+          :class="hasScrolledDown ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'"
+          @click="scrollToNextSection"
+        >
+          <span class="text-2xs tracking-[0.28em] uppercase">Scroll</span>
+          <span class="relative block h-14 w-px overflow-hidden rounded-full bg-app-text/25">
+            <span class="hero-scroll-segment absolute left-1/2 top-0 block h-5 w-px -translate-x-1/2 rounded-full bg-app-text"></span>
+          </span>
+        </button>
       </section>
     </div>
 
@@ -141,13 +177,36 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Fade-in animation for potential future use or consistency */
-.hero-word {
-  opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+@keyframes hero-scroll-segment-motion {
+  0% {
+    transform: translate(-50%, -120%);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, 260%);
+    opacity: 0;
+  }
 }
 
-.hero-word-visible {
-  opacity: 1;
+.hero-scroll-segment {
+  animation: hero-scroll-segment-motion 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-segment {
+    animation: none;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
 }
 </style>
