@@ -13,7 +13,6 @@ import Project from './components/storyblok/Project.vue'
 import ContactForm from './components/storyblok/ContactForm.vue'
 import Testimonial from './components/storyblok/Testimonial.vue'
 import AboutSection from './components/storyblok/AboutSection.vue'
-import ConnectSection from './components/storyblok/ConnectSection.vue'
 import FallbackComponent from './components/storyblok/FallbackComponent.vue'
 import InstagramReels from './components/storyblok/InstagramReels.vue'
 
@@ -43,8 +42,6 @@ const components = {
     Instagram_Reels: InstagramReels,
     about_section: AboutSection,
     AboutSection: AboutSection,
-    connect_section: ConnectSection,
-    ConnectSection: ConnectSection,
     fallback: FallbackComponent,
     Fallback: FallbackComponent
 }

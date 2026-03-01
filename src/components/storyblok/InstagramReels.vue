@@ -14,10 +14,7 @@ interface ReelCard {
   imageAlt: string
 }
 
-const defaultProfileUrl = 'https://www.instagram.com/_sondastudios_/'
-const defaultKicker = 'Latest Reels'
-const defaultHeadline = 'Latest Reels'
-const defaultProfileLabel = 'View Instagram'
+
 
 const pick = <T = unknown>(source: Record<string, any> | undefined, keys: string[]): T | undefined => {
   if (!source) return undefined
@@ -72,31 +69,7 @@ const isInstagramReelUrl = (value: string): boolean => {
   }
 }
 
-const kicker = computed(() => {
-  return String(pick(props.blok as any, ['kicker', 'Kicker']) || defaultKicker)
-})
 
-const headline = computed(() => {
-  return String(pick(props.blok as any, ['headline', 'Headline']) || defaultHeadline)
-})
-
-const intro = computed(() => {
-  return String(pick(props.blok as any, ['intro', 'Intro']) || '')
-})
-
-const profileLink = computed(() => {
-  const fromCms = resolveLink(
-    pick(props.blok as any, ['profile_link', 'profileLink', 'Profile_link', 'ProfileLink'])
-  )
-  return fromCms || defaultProfileUrl
-})
-
-const profileLabel = computed(() => {
-  return String(
-    pick(props.blok as any, ['profile_label', 'profileLabel', 'Profile_label', 'ProfileLabel']) ||
-      defaultProfileLabel
-  )
-})
 
 const reels = computed(() => {
   return (
@@ -142,34 +115,11 @@ const cards = computed<ReelCard[]>(() => {
     v-if="blok"
     id="01"
     v-editable="blok"
-    class="w-full bg-app-bg text-app-text px-8 md:px-16 py-20 md:py-28 transition-colors duration-500"
+    class="w-full bg-app-bg text-app-text px-8 md:px-16 pt-4 md:pt-8 pb-20 md:pb-28 transition-colors duration-500"
   >
     <div class="max-w-7xl mx-auto">
-      <header class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 md:gap-12 mb-12 md:mb-16">
-        <div class="max-w-4xl">
-          <p class="text-3xs uppercase tracking-extra-wide text-app-text/45 mb-5">
-            {{ kicker }}
-          </p>
-          <h2 class="text-5xl md:text-7xl lg:text-display-giant leading-[0.9]">
-            {{ headline }}
-          </h2>
-          <p v-if="intro.trim()" class="mt-6 max-w-3xl text-base md:text-lg text-app-text/70 font-light leading-relaxed">
-            {{ intro }}
-          </p>
-        </div>
-
-        <a
-          :href="profileLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center self-start lg:self-end border border-app-text/20 px-6 py-3 text-2xs uppercase tracking-extra-wide text-app-text/80 transition-all duration-500 hover:bg-app-text hover:text-app-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-app-text"
-        >
-          {{ profileLabel }}
-        </a>
-      </header>
-
-      <ul v-if="cards.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" aria-label="Instagram reels">
-        <li v-for="card in cards" :key="card.uid">
+      <ul v-if="cards.length" class="flex flex-wrap justify-center gap-8 md:gap-10" aria-label="Instagram reels">
+        <li v-for="(card, index) in cards" :key="card.uid" class="w-full max-w-[267px] reel-card" :style="{ '--index': index }">
           <a
             :href="card.url"
             target="_blank"
@@ -178,7 +128,7 @@ const cards = computed<ReelCard[]>(() => {
             class="group block rounded-[1.5rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-app-text"
           >
             <article class="h-full overflow-hidden border border-app-text/10 bg-app-bg/40 transition-transform duration-500 group-hover:-translate-y-1">
-              <div class="aspect-[9/16] overflow-hidden bg-app-text/5">
+              <div class="aspect-[382/680] overflow-hidden bg-app-text/5">
                 <img
                   v-if="card.imageSrc"
                   :src="card.imageSrc"
@@ -213,3 +163,20 @@ const cards = computed<ReelCard[]>(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.reel-card {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: reelReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: calc(0.1s + (var(--index) * 0.15s));
+}
+
+@keyframes reelReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+

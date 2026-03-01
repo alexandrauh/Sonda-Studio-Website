@@ -24,27 +24,17 @@ const subheadline = computed(() => {
   return text.replace(/(\s*)(Now live\.)/i, '\n$2')
 })
 
-const buttons = computed(() => props.blok?.buttons || (props.blok as any)?.Buttons || [])
 
-const getLink = (link: any) => {
-  if (!link) return '#'
-  let url = '#'
-  if (link.linktype === 'story') {
-    url = link.cached_url ? `/${link.cached_url}` : '#'
-  } else {
-    url = link.url || '#'
-  }
-
-  // Force scroll to form for contact links
-  if (url === '/contact' || url === '/contact/') {
-    return '/contact#contact-form'
-  }
-
-  return url
-}
 
 const scrollToDiscover = () => {
   const el = document.getElementById('01')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
+const scrollToContactForm = () => {
+  const el = document.getElementById('contact-form')
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
   }
@@ -116,42 +106,11 @@ onUnmounted(() => {
       </section>
     </div>
 
-    <!-- ========== CONTACT PAGE HERO (original layout) ========== -->
-    <template v-if="isContact">
-      <section class="relative flex p-8 md:p-16 min-h-screen items-end justify-start text-left bg-app-bg">
-        <div class="relative z-10 w-full max-w-7xl mx-auto">
-          <h1 
-            class="text-7xl md:text-8xl lg:text-display-giant font-normal mb-0 leading-[0.9]"
-            :style="{ fontFamily: 'var(--font-sans)', color: 'inherit' }"
-          >
-            {{ headline }}
-          </h1>
-        </div>
-      </section>
-      <section class="w-full bg-app-bg p-8 md:p-16 text-left">
-        <div class="max-w-7xl mx-auto flex flex-col items-start text-left">
-          <p v-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
-            {{ subheadline }}
-          </p>
-          <div v-if="buttons && buttons.length" class="flex flex-wrap items-center justify-start gap-8">
-            <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
-              <router-link 
-                :to="getLink(button.link || (button as any).Link)"
-                :class="[
-                  index === 0 ? 'button-primary' : 'button-secondary'
-                ]"
-              >
-                {{ button.label || (button as any).Label || 'Discover' }}
-              </router-link>
-            </template>
-          </div>
-        </div>
-      </section>
-    </template>
-
-    <template v-if="isServices || isWork">
+    <!-- ========== CONTACT, SERVICES & WORK PAGE HERO ========== -->
+    <template v-if="isContact || isServices || isWork">
       <section 
-        class="relative flex overflow-hidden p-8 md:p-16 min-h-[70vh] flex-col items-center justify-start text-center pt-[25vh] md:pt-[30vh] pb-32 md:pb-48 bg-app-bg"
+        class="relative flex overflow-hidden p-8 md:p-16 flex-col items-center justify-start text-center pt-[25vh] md:pt-[30vh] bg-app-bg"
+        :class="isWork ? 'min-h-[50vh] pb-16 md:pb-24' : 'min-h-[70vh] pb-32 md:pb-48'"
       >
         <div 
           class="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center"
@@ -167,8 +126,13 @@ onUnmounted(() => {
             {{ subheadline }}
           </p>
           <div class="flex flex-wrap items-center justify-center gap-8 mt-10">
-            <a href="#" @click.prevent="scrollToDiscover" class="button-primary">Discover</a>
-            <router-link to="/contact#contact-form" class="button-secondary">Contact us</router-link>
+            <template v-if="isContact">
+              <a href="#contact-form" @click.prevent="scrollToContactForm" class="button-primary">Contact us</a>
+            </template>
+            <template v-else>
+              <a href="#" @click.prevent="scrollToDiscover" class="button-primary">Discover</a>
+              <router-link to="/contact#contact-form" class="button-secondary">Contact us</router-link>
+            </template>
           </div>
         </div>
       </section>

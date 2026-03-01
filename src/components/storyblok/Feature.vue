@@ -68,7 +68,7 @@ const isSecondary = computed(() => {
 </script>
 
 <template>
-  <section v-if="blok" v-editable="blok" 
+  <section v-if="blok && (title.trim() || text.trim())" v-editable="blok" 
     class="sticky top-0 w-full block overflow-hidden transition-colors duration-500 reveal-on-scroll"
     :class="[
       isSecondary ? 'bg-[var(--color-brand-cream)] text-[var(--color-brand-brown)]' : 'bg-app-bg text-app-text',
