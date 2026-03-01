@@ -69,25 +69,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col items-center justify-center pt-4 pb-8" ref="counterRef">
+  <div class="w-full flex flex-col items-center justify-center pt-2" ref="counterRef">
     
     <!-- Top Text -->
-    <span class="text-xs md:text-sm tracking-[0.2em] uppercase text-app-text/70 font-light mb-6 md:mb-8">
+    <span class="text-[0.65rem] md:text-xs tracking-[0.2em] uppercase text-app-text/70 font-light mb-4 md:mb-6">
       We've poured
     </span>
 
-    <!-- Flip Cards Container (Tighter gap for compactness) -->
-    <div class="flex flex-row justify-center gap-1.5 md:gap-3 lg:gap-4 mb-6 md:mb-8">
+    <!-- Flip Cards Container (Tighter gap and smaller total width) -->
+    <div class="flex flex-row justify-center gap-1.5 md:gap-2 lg:gap-3 mb-4 md:mb-6">
       
-      <!-- Individual Digit Card (Brown background, narrower width) -->
+      <!-- Individual Digit Card (~20% smaller dimensions) -->
       <div 
         v-for="(digit, index) in paddedDigits" 
         :key="index"
-        class="relative w-[3.5rem] md:w-[4.5rem] lg:w-[6rem] h-[5rem] md:h-[6.5rem] lg:h-[8.5rem] bg-app-bg border border-brand-sand rounded-lg shadow-sm flex flex-col justify-center items-center"
+        class="relative w-[3rem] md:w-[3.5rem] lg:w-[4.8rem] h-[4rem] md:h-[5.2rem] lg:h-[6.8rem] bg-app-bg border border-brand-sand rounded-lg shadow-sm flex flex-col justify-center items-center"
       >
-        <!-- Top Calendar Rings (solid brand-sand border and bg-app-bg fill) -->
-        <div class="absolute -top-[0.5rem] md:-top-[0.6rem] left-[20%] w-[0.35rem] md:w-[0.4rem] h-4 md:h-5 border-[1.5px] border-brand-sand rounded-full bg-app-bg z-20"></div>
-        <div class="absolute -top-[0.5rem] md:-top-[0.6rem] right-[20%] w-[0.35rem] md:w-[0.4rem] h-4 md:h-5 border-[1.5px] border-brand-sand rounded-full bg-app-bg z-20"></div>
+        <!-- Top Calendar Rings (scaled down slightly) -->
+        <div class="absolute -top-[0.4rem] md:-top-[0.5rem] left-[20%] w-[0.25rem] md:w-[0.35rem] h-3 md:h-4 border-[1.5px] border-brand-sand rounded-full bg-app-bg z-20"></div>
+        <div class="absolute -top-[0.4rem] md:-top-[0.5rem] right-[20%] w-[0.25rem] md:w-[0.35rem] h-3 md:h-4 border-[1.5px] border-brand-sand rounded-full bg-app-bg z-20"></div>
 
         <!-- Horizontal Split Line -->
         <div class="absolute top-1/2 left-0 w-full h-[1px] bg-brand-sand transform -translate-y-1/2 z-0 opacity-50 pointer-events-none"></div>
@@ -95,7 +95,7 @@ onUnmounted(() => {
         <!-- Overflow hidden wrapper for slot-machine transition -->
         <div class="relative w-full h-full overflow-hidden flex justify-center items-center z-10">
           <Transition name="flip-roll">
-            <span :key="digit" class="absolute text-[3rem] md:text-[4rem] lg:text-[5.5rem] font-light leading-none tracking-tighter text-app-text bg-app-bg px-2 pt-2 md:pt-3 lg:pt-4">
+            <span :key="digit" class="absolute text-[2.5rem] md:text-[3.2rem] lg:text-[4.4rem] font-light leading-none tracking-tighter text-app-text bg-app-bg px-1.5 pt-1.5 md:pt-2 lg:pt-3">
               {{ digit }}
             </span>
           </Transition>
@@ -106,7 +106,7 @@ onUnmounted(() => {
     </div>
 
     <!-- Bottom Text -->
-    <span class="text-xs md:text-sm tracking-[0.2em] uppercase text-app-text/70 font-light text-center px-4 max-w-sm">
+    <span class="text-[0.65rem] md:text-xs tracking-[0.2em] uppercase text-app-text/70 font-light text-center px-4 max-w-sm">
       Days into mastering the art of storytelling
     </span>
 

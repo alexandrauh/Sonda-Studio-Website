@@ -44,13 +44,14 @@ const remainingParagraphs = computed(() => paragraphs.value.slice(2))
 
       <!-- Content with natural flow and paragraph break prevention -->
       <div class="columns-1 md:columns-2 gap-12 md:gap-24 text-lg md:text-xl text-app-text/70 font-light leading-relaxed tracking-wide">
-        <p v-for="(p, i) in firstTwoParagraphs" :key="`p1-${i}`" class="mb-8">
+        <p v-for="(p, i) in firstTwoParagraphs" :key="`p1-${i}`" class="mb-4">
           {{ p }}
         </p>
 
-        <DaysCounter class="break-inside-avoid mt-12 mb-4 md:mb-6" />
+        <!-- Tightened margins directly around the flip calendar -->
+        <DaysCounter class="break-inside-avoid mt-6 mb-[49px]" />
 
-        <p v-for="(p, i) in remainingParagraphs" :key="`p2-${i}`" class="mb-8">
+        <p v-for="(p, i) in remainingParagraphs" :key="`p2-${i}`" class="mb-6">
           {{ p }}
         </p>
       </div>

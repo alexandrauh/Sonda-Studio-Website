@@ -62,8 +62,12 @@ const isInstagramReelUrl = (value: string): boolean => {
     if (!host.endsWith('instagram.com')) return false
 
     const segments = url.pathname.split('/').filter(Boolean)
-    const [firstSegment, secondSegment] = segments
-    return firstSegment?.toLowerCase() === 'reel' && Boolean(secondSegment)
+    if (segments.length < 2) return false
+    
+    if (segments[0]?.toLowerCase() === 'reel') return true
+    if (segments[1]?.toLowerCase() === 'reel') return true
+
+    return false
   } catch {
     return false
   }
@@ -80,12 +84,33 @@ const reels = computed(() => {
 const cards = computed<ReelCard[]>(() => {
   return reels.value
     .map((item, index) => {
-      const url = resolveLink(
+      let url = resolveLink(
         pick(item as any, ['reel_link', 'reelLink', 'Reel_link', 'ReelLink'])
       )
 
       if (!isInstagramReelUrl(url)) {
         return null
+      }
+
+      // Force the reel to open in the context of the Sonda Studios profile
+      // This prevents Instagram from auto-playing random unrelated reels
+      try {
+        const urlObj = new URL(url)
+        const segments = urlObj.pathname.split('/').filter(Boolean)
+        let reelId = ''
+        
+        if (segments[0]?.toLowerCase() === 'reel') {
+          reelId = segments[1] || ''
+        } else if (segments[1]?.toLowerCase() === 'reel') {
+          reelId = segments[2] || ''
+        }
+        
+        if (reelId) {
+          urlObj.pathname = `/_sondastudios_/reel/${reelId}/`
+          url = urlObj.toString()
+        }
+      } catch (e) {
+        // Fallback to original url if parsing fails
       }
 
       const title = String(pick(item as any, ['title', 'Title']) || `Reel ${index + 1}`)
