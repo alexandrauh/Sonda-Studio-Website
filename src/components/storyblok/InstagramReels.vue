@@ -144,14 +144,6 @@ const cards = computed<ReelCard[]>(() => {
                   Instagram Reel
                 </div>
               </div>
-              <div class="p-5 md:p-6 flex items-center justify-between gap-5">
-                <h3 class="text-lg md:text-xl leading-tight text-app-text/95">
-                  {{ card.title }}
-                </h3>
-                <span class="text-2xs uppercase tracking-extra-wide text-app-text/50 transition-colors duration-500 group-hover:text-app-text">
-                  View Reel
-                </span>
-              </div>
             </article>
           </a>
         </li>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AboutSectionBlok } from '../../types/storyblok'
 import { computed } from 'vue'
+import DaysCounter from '../DaysCounter.vue'
 
 const props = defineProps<{
   blok: AboutSectionBlok
@@ -11,15 +12,21 @@ const headline = computed(() => {
   return val.replace(/Sonda Studio(?!s)/gi, 'Sonda Studios')
 })
 
-const normalizedContent = computed(() => {
+const paragraphs = computed(() => {
   let val = props.blok?.content || ''
-  return val
+  // Normalize spacing and newlines
+  const text = val
     .replace(/Sonda Studio(?!s)/gi, 'Sonda Studios')
     .replace(/\\r\\n/g, '\n')
     .replace(/\r\n/g, '\n')
     .replace(/\\n/g, '\n')
     .trim()
+  
+  return text.split(/\n+/).filter(p => p.trim() !== '')
 })
+
+const firstTwoParagraphs = computed(() => paragraphs.value.slice(0, 2))
+const remainingParagraphs = computed(() => paragraphs.value.slice(2))
 </script>
 
 <template>
@@ -37,8 +44,14 @@ const normalizedContent = computed(() => {
 
       <!-- Content with natural flow and paragraph break prevention -->
       <div class="columns-1 md:columns-2 gap-12 md:gap-24 text-lg md:text-xl text-app-text/70 font-light leading-relaxed tracking-wide">
-        <p class="whitespace-pre-line">
-          {{ normalizedContent }}
+        <p v-for="(p, i) in firstTwoParagraphs" :key="`p1-${i}`" class="mb-8">
+          {{ p }}
+        </p>
+
+        <DaysCounter class="break-inside-avoid mt-12 mb-4 md:mb-6" />
+
+        <p v-for="(p, i) in remainingParagraphs" :key="`p2-${i}`" class="mb-8">
+          {{ p }}
         </p>
       </div>
     </div>
