@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useStoryblok } from '@storyblok/vue'
+import { useStoryblokContent } from '../composables/useStoryblokContent'
 
-const story = await useStoryblok('work', { version: 'draft' })
+const story = await useStoryblokContent('work')
 </script>
 
 <template>

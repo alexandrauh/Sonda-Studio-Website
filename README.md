@@ -33,9 +33,14 @@ A premium portfolio website for Sonda Studio, a full-service media agency specia
    ```
 
 3. Configure environment variables:
-   Create a `.env` file in the root directory and add your Storyblok Preview Token:
+   Copy `.env.example` to `.env` and set your Storyblok token:
    ```env
-   VITE_STORYBLOK_TOKEN=your_preview_token_here
+   VITE_STORYBLOK_TOKEN=your_storyblok_token
+   ```
+   Optional:
+   ```env
+   # Defaults to draft in dev and published in production.
+   VITE_STORYBLOK_VERSION=published
    ```
 
 ### Development
@@ -53,6 +58,14 @@ npm run build
 ```
 
 The build assets will be generated in the `dist/` folder.
+
+### Quality Checks
+
+Run static checks:
+```bash
+npm run lint
+npm run typecheck
+```
 
 ## Project Structure
 
@@ -75,3 +88,10 @@ We use Storyblok for content management. Clients can manage:
 - General agency information
 
 To see live previews in Storyblok, ensure the development server is running and configured as the preview URL in your Storyblok space settings.
+
+## Deployment (Netlify)
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- SPA redirect fallback is configured in `public/_redirects`
+- Set environment variables in Netlify site settings (do not commit real tokens)

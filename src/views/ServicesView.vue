@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useStoryblok } from '@storyblok/vue'
+import { useStoryblokContent } from '../composables/useStoryblokContent'
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
-const story = await useStoryblok('services', { version: 'draft' })
+const story = await useStoryblokContent('services')
 
 const activeSection = ref(0)
 const totalSections = ref(0)
