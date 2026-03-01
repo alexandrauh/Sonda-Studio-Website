@@ -94,4 +94,7 @@ To see live previews in Storyblok, ensure the development server is running and 
 - Build command: `npm run build`
 - Publish directory: `dist`
 - SPA redirect fallback is configured in `public/_redirects`
-- Set environment variables in Netlify site settings (do not commit real tokens)
+- Set these environment variables in Netlify:
+  - `VITE_STORYBLOK_TOKEN` (public Storyblok CDN token for published content)
+  - `VITE_STORYBLOK_VERSION=published`
+- Do not set management/personal Storyblok tokens in Netlify for this frontend app.
