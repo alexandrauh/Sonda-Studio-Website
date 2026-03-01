@@ -71,3 +71,11 @@ export interface InstagramReelsBlok extends StoryblokComponentBlok {
     profile_label?: string;
     reels?: InstagramReelItemBlok[];
 }
+export interface AboutSectionBlok extends StoryblokComponentBlok {
+    headline: string;
+    content: string;
+}
+
+export interface ConnectSectionBlok extends StoryblokComponentBlok {
+    show_divider?: boolean;
+}

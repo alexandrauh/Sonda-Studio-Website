@@ -19,27 +19,11 @@ const headline = computed(() => {
   return val.replace(/Sonda Studio(?!s)/gi, 'Sonda Studios')
 })
 
-const headlineWords = computed(() => headline.value.split(/\s+/).filter(Boolean))
-
 const subheadline = computed(() => {
   const text = props.blok?.subheadline || (props.blok as any)?.Subheadline || ''
-  // If it's the home page and has the "About" text, we handle it specially
-  if (isHome && text.includes('About (Heading)')) {
-    return text
-  }
   return text.replace(/(\s*)(Now live\.)/i, '\n$2')
 })
 
-const subheadlineSections = computed(() => {
-  const text = subheadline.value
-  if (isHome && text.includes('About (Heading)')) {
-    const lines = text.split('\n')
-    const heading = lines[0]
-    const content = lines.slice(1).join('\n')
-    return { heading, content }
-  }
-  return null
-})
 const buttons = computed(() => props.blok?.buttons || (props.blok as any)?.Buttons || [])
 
 const getLink = (link: any) => {
@@ -57,19 +41,6 @@ const getLink = (link: any) => {
   }
 
   return url
-}
-
-const getButtonLabel = (button: any, index: number) => {
-  const label = button.label || (button as any).Label || ''
-  // Override second button to say "Services"
-  if (index === 1) return 'Services'
-  return label || 'Contact'
-}
-
-const getButtonLink = (button: any, index: number) => {
-  // Override second button to link to services
-  if (index === 1) return '/services'
-  return getLink(button.link || (button as any).Link)
 }
 
 const scrollToDiscover = () => {
@@ -94,7 +65,7 @@ onMounted(() => {
 
     <!-- ========== HOME PAGE HERO ========== -->
     <div v-if="isHome" class="relative">
-      <!-- Video Section (80vh) -->
+      <!-- Video Section (90vh) - Now the pure hero -->
       <section class="relative h-[90vh] overflow-hidden bg-app-bg">
         <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
           <video
@@ -105,57 +76,6 @@ onMounted(() => {
             muted
             playsinline
           ></video>
-        </div>
-      </section>
-
-      <!-- Headline spanning both sections -->
-      <h1
-        v-if="headlineWords.length"
-        class="hero-headline absolute left-0 w-full px-8 md:px-16 z-20 leading-[0.9] pointer-events-none"
-        :style="{ fontFamily: 'var(--font-serif)', color: '#ffffff' }"
-      >
-        <span
-          v-for="(word, i) in headlineWords"
-          :key="i"
-          class="hero-word inline-block mr-[0.3em]"
-          :class="{ 'hero-word-visible': animationReady }"
-          :style="{ transitionDelay: `${Number(i) * 500}ms` }"
-        >{{ word }}</span>
-      </h1>
-
-      <!-- Brown Section: subheadline + buttons -->
-      <section class="relative w-full bg-app-bg px-8 md:px-16 pb-16 md:pb-20 text-left z-10">
-        <div class="hero-content-spacer"></div>
-        <div class="max-w-7xl">
-          <div v-if="subheadlineSections" class="mb-12">
-            <h2 class="text-xs uppercase tracking-[0.3em] font-light text-brand-sand mb-8">{{ subheadlineSections.heading }}</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24">
-              <p class="text-lg md:text-xl text-app-text/90 font-light leading-relaxed tracking-wide whitespace-pre-line">
-                {{ subheadlineSections.content.split('\n\n')[0] }}
-              </p>
-              <div class="flex flex-col gap-8">
-                <p v-for="(p, i) in subheadlineSections.content.split('\n\n').slice(1)" :key="i" class="text-lg md:text-xl text-app-text/70 font-light leading-relaxed tracking-wide whitespace-pre-line">
-                  {{ p }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <p v-else-if="subheadline" class="text-lg md:text-xl text-app-text/60 font-light max-w-2xl leading-relaxed mb-10 tracking-normal whitespace-pre-line">
-            {{ subheadline }}
-          </p>
-          
-          <div v-if="buttons && buttons.length" class="flex flex-wrap items-center justify-start gap-8">
-            <template v-for="(button, index) in buttons.slice(0, 2)" :key="button._uid">
-              <router-link 
-                :to="getButtonLink(button, Number(index))"
-                :class="[
-                  index === 0 ? 'button-primary' : 'button-secondary'
-                ]"
-              >
-                {{ getButtonLabel(button, Number(index)) }}
-              </router-link>
-            </template>
-          </div>
         </div>
       </section>
     </div>
@@ -221,23 +141,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Headline positioned to straddle the boundary between video and brown sections.
-   Bottom of the video section is the anchor point; the headline sits so that
-   roughly 50% is on the video and 50% on the brown section. */
-.hero-headline {
-  font-size: clamp(4rem, 12vw, 10rem);
-  /* Position at the bottom of the 90vh video section,
-     then pull up by ~55% so headline straddles the boundary */
-  top: 90vh;
-  transform: translateY(-55%);
-}
-
-/* Spacer in the brown section so the subheadline + buttons start below the headline */
-.hero-content-spacer {
-  height: clamp(4rem, 8vw, 8rem);
-}
-
-/* Per-word fade-in animation */
+/* Fade-in animation for potential future use or consistency */
 .hero-word {
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
