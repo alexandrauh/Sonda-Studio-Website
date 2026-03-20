@@ -15,6 +15,8 @@ import Testimonial from './components/storyblok/Testimonial.vue'
 import AboutSection from './components/storyblok/AboutSection.vue'
 import FallbackComponent from './components/storyblok/FallbackComponent.vue'
 import InstagramReels from './components/storyblok/InstagramReels.vue'
+import MasonryGrid from './components/storyblok/MasonryGrid.vue'
+import PortfolioItem from './components/storyblok/PortfolioItem.vue'
 
 const app = createApp(App)
 
@@ -43,7 +45,11 @@ const components = {
     about_section: AboutSection,
     AboutSection: AboutSection,
     fallback: FallbackComponent,
-    Fallback: FallbackComponent
+    Fallback: FallbackComponent,
+    masonry_grid: MasonryGrid,
+    MasonryGrid: MasonryGrid,
+    portfolio_item: PortfolioItem,
+    PortfolioItem: PortfolioItem
 }
 
 // Explicitly register as global components to ensure visibility
